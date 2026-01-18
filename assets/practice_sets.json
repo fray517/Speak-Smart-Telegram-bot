@@ -1,0 +1,123 @@
+[
+  {
+    "id": "en_001",
+    "file": "assets/phrases/en/001.ogg",
+    "expected_text": "How are you today",
+    "keywords": ["how", "are", "you", "today"]
+  },
+  {
+    "id": "en_002",
+    "file": "assets/phrases/en/002.ogg",
+    "expected_text": "My name is Alex",
+    "keywords": ["my", "name", "is", "alex"]
+  },
+  {
+    "id": "en_003",
+    "file": "assets/phrases/en/003.ogg",
+    "expected_text": "Nice to meet you",
+    "keywords": ["nice", "to", "meet", "you"]
+  },
+  {
+    "id": "en_004",
+    "file": "assets/phrases/en/004.ogg",
+    "expected_text": "Where are you from",
+    "keywords": ["where", "are", "you", "from"]
+  },
+  {
+    "id": "en_005",
+    "file": "assets/phrases/en/005.ogg",
+    "expected_text": "I am learning English",
+    "keywords": ["i", "am", "learning", "english"]
+  },
+  {
+    "id": "en_006",
+    "file": "assets/phrases/en/006.ogg",
+    "expected_text": "Could you repeat that please",
+    "keywords": ["could", "you", "repeat", "that", "please"]
+  },
+  {
+    "id": "en_007",
+    "file": "assets/phrases/en/007.ogg",
+    "expected_text": "I would like a cup of coffee",
+    "keywords": ["i", "would", "like", "cup", "coffee"]
+  },
+  {
+    "id": "en_008",
+    "file": "assets/phrases/en/008.ogg",
+    "expected_text": "What time is it now",
+    "keywords": ["what", "time", "is", "it", "now"]
+  },
+  {
+    "id": "en_009",
+    "file": "assets/phrases/en/009.ogg",
+    "expected_text": "I have a meeting at ten",
+    "keywords": ["i", "have", "meeting", "at", "ten"]
+  },
+  {
+    "id": "en_010",
+    "file": "assets/phrases/en/010.ogg",
+    "expected_text": "Can you help me with this",
+    "keywords": ["can", "you", "help", "me", "with", "this"]
+  },
+  {
+    "id": "en_011",
+    "file": "assets/phrases/en/011.ogg",
+    "expected_text": "I do not understand",
+    "keywords": ["i", "do", "not", "understand"]
+  },
+  {
+    "id": "en_012",
+    "file": "assets/phrases/en/012.ogg",
+    "expected_text": "Please speak more slowly",
+    "keywords": ["please", "speak", "more", "slowly"]
+  },
+  {
+    "id": "en_013",
+    "file": "assets/phrases/en/013.ogg",
+    "expected_text": "I will call you later",
+    "keywords": ["i", "will", "call", "you", "later"]
+  },
+  {
+    "id": "en_014",
+    "file": "assets/phrases/en/014.ogg",
+    "expected_text": "What do you do for work",
+    "keywords": ["what", "do", "you", "do", "for", "work"]
+  },
+  {
+    "id": "en_015",
+    "file": "assets/phrases/en/015.ogg",
+    "expected_text": "I like traveling and music",
+    "keywords": ["i", "like", "traveling", "and", "music"]
+  },
+  {
+    "id": "en_016",
+    "file": "assets/phrases/en/016.ogg",
+    "expected_text": "Could you tell me the way",
+    "keywords": ["could", "you", "tell", "me", "the", "way"]
+  },
+  {
+    "id": "en_017",
+    "file": "assets/phrases/en/017.ogg",
+    "expected_text": "I would like to book a table",
+    "keywords": ["i", "would", "like", "to", "book", "table"]
+  },
+  {
+    "id": "en_018",
+    "file": "assets/phrases/en/018.ogg",
+    "expected_text": "The weather is nice today",
+    "keywords": ["the", "weather", "is", "nice", "today"]
+  },
+  {
+    "id": "en_019",
+    "file": "assets/phrases/en/019.ogg",
+    "expected_text": "I am ready to start",
+    "keywords": ["i", "am", "ready", "to", "start"]
+  },
+  {
+    "id": "en_020",
+    "file": "assets/phrases/en/020.ogg",
+    "expected_text": "Thank you and have a good day",
+    "keywords": ["thank", "you", "and", "have", "good", "day"]
+  }
+]
+
