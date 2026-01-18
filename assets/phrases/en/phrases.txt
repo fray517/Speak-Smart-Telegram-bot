@@ -1,0 +1,26 @@
+SpeakSmart — Practice set EN (20 фраз)
+
+Файлы для записи:
+assets/phrases/en/001.ogg ... assets/phrases/en/020.ogg
+
+001 — How are you today
+002 — My name is Alex
+003 — Nice to meet you
+004 — Where are you from
+005 — I am learning English
+006 — Could you repeat that please
+007 — I would like a cup of coffee
+008 — What time is it now
+009 — I have a meeting at ten
+010 — Can you help me with this
+011 — I do not understand
+012 — Please speak more slowly
+013 — I will call you later
+014 — What do you do for work
+015 — I like traveling and music
+016 — Could you tell me the way
+017 — I would like to book a table
+018 — The weather is nice today
+019 — I am ready to start
+020 — Thank you and have a good day
+
