@@ -8,6 +8,9 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from handlers.common import router as common_router
+from middlewares.db_logging import DbLoggingMiddleware
+from storage.db import Database
+from storage.repositories import Repositories
 from utils.config import load_settings
 from utils.logging_config import setup_logging
 
@@ -15,9 +18,10 @@ from utils.logging_config import setup_logging
 logger = logging.getLogger(__name__)
 
 
-def _setup_dispatcher() -> Dispatcher:
+def _setup_dispatcher(*, repos: Repositories) -> Dispatcher:
     dp = Dispatcher(storage=MemoryStorage())
     dp.include_router(common_router)
+    dp.message.middleware(DbLoggingMiddleware(repos))
     return dp
 
 
@@ -25,17 +29,22 @@ async def main() -> None:
     settings = load_settings()
     setup_logging(log_level=settings.log_level)
 
+    db = Database(db_path=settings.db_path)
+    await db.init()
+    repos = Repositories(db=db)
+
     bot = Bot(
         token=settings.bot_token,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
     )
-    dp = _setup_dispatcher()
+    dp = _setup_dispatcher(repos=repos)
 
     logger.info("Bot started (polling).")
     try:
         await dp.start_polling(bot)
     finally:
         await bot.session.close()
+        await db.close()
         logger.info("Bot stopped.")
 
 

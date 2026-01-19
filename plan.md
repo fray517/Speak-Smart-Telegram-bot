@@ -1,4 +1,4 @@
-# План разработки SpeakSmart (Telegram-бот, MVP)
+ # План разработки SpeakSmart (Telegram-бот, MVP)
 
 Основано на требованиях из `project.md`. Цель: получить рабочий MVP
 на Python 3.10+ с `aiogram` (polling), режимами **Practice**, **Support**
