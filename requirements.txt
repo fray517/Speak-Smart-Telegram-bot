@@ -1,2 +1,6 @@
 aiogram==3.4.1
 aiosqlite==0.20.0
+
+edge-tts==6.1.10
+pyttsx3==2.90
+gTTS==2.5.4

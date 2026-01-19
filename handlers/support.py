@@ -260,7 +260,7 @@ async def on_operator_active(
         try:
             sent = await message.bot.send_message(
                 settings.operator_id,
-                "Тикет #{ticket_id}: пользователь дополнил сообщение:\n"
+                f"Тикет #{ticket_id}: пользователь дополнил сообщение:\n"
                 f"{message.text.strip()}",
                 parse_mode=None,
                 reply_markup=_operator_ticket_keyboard(ticket_id),

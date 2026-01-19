@@ -4,6 +4,7 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
+from aiogram.types import ReplyKeyboardRemove
 
 from storage.repositories import Repositories
 from utils.config import Settings
@@ -70,7 +71,7 @@ async def cmd_cancel(
 
     if current is None:
         text = "Ок. Вы не были в режиме — состояние чистое."
-        await message.answer(text)
+        await message.answer(text, reply_markup=ReplyKeyboardRemove())
 
         if message.from_user is not None:
             await repos.log_message(
@@ -82,7 +83,7 @@ async def cmd_cancel(
         return
 
     text = "Ок. Режим отменён, состояние сброшено."
-    await message.answer(text)
+    await message.answer(text, reply_markup=ReplyKeyboardRemove())
 
     if message.from_user is not None:
         await repos.log_message(
