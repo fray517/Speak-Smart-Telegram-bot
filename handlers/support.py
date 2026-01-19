@@ -3,6 +3,10 @@ import logging
 from aiogram import Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
+from aiogram.exceptions import TelegramBadRequest
+from aiogram.exceptions import TelegramForbiddenError
+from aiogram.types import InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup
 from aiogram.types import KeyboardButton
 from aiogram.types import Message
 from aiogram.types import ReplyKeyboardMarkup
@@ -31,6 +35,19 @@ def _support_keyboard() -> ReplyKeyboardMarkup:
         resize_keyboard=True,
         one_time_keyboard=False,
         input_field_placeholder="Введите вопрос или выберите действие",
+    )
+
+
+def _operator_ticket_keyboard(ticket_id: int) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="Закрыть тикет",
+                    callback_data=f"close_ticket:{ticket_id}",
+                )
+            ]
+        ]
     )
 
 
@@ -161,7 +178,42 @@ async def on_support_escalation(
         f"username: @{username}\n\n"
         f"Вопрос:\n{question}"
     )
-    await message.bot.send_message(settings.operator_id, operator_text)
+    try:
+        sent = await message.bot.send_message(
+            settings.operator_id,
+            operator_text,
+            parse_mode=None,
+            reply_markup=_operator_ticket_keyboard(ticket_id),
+        )
+        await repos.save_operator_map(
+            operator_chat_id=settings.operator_id,
+            forwarded_message_id=sent.message_id,
+            user_id=user_id,
+        )
+        logger.info(
+            "Operator notified: ticket=%s operator_id=%s message_id=%s user_id=%s",
+            ticket_id,
+            settings.operator_id,
+            sent.message_id,
+            user_id,
+        )
+    except (TelegramForbiddenError, TelegramBadRequest) as exc:
+        logger.exception("Failed to notify operator (ticket=%s)", ticket_id)
+        await repos.log_message(
+            user_id=user_id,
+            direction="error",
+            msg_type="text",
+            text=f"operator_notify_failed:{ticket_id}:{exc}",
+        )
+        await message.answer(
+            "Я не смог отправить сообщение оператору.\n\n"
+            "Чаще всего это происходит, если оператор ещё не открывал чат с ботом.\n"
+            "Попросите оператора написать боту /start, затем повторите эскалацию.\n\n"
+            "Если оператор уже писал боту, проверьте, что OPERATOR_ID указан верно.",
+            reply_markup=_support_keyboard(),
+        )
+        await state.set_state(Mode.support_wait_question)
+        return
 
     await repos.log_message(
         user_id=user_id,
@@ -205,10 +257,21 @@ async def on_operator_active(
             ticket_id=ticket_id,
             last_user_message=message.text.strip(),
         )
-        await message.bot.send_message(
-            settings.operator_id,
-            f"Тикет #{ticket_id}: пользователь дополнил сообщение:\n{message.text.strip()}",
-        )
+        try:
+            sent = await message.bot.send_message(
+                settings.operator_id,
+                "Тикет #{ticket_id}: пользователь дополнил сообщение:\n"
+                f"{message.text.strip()}",
+                parse_mode=None,
+                reply_markup=_operator_ticket_keyboard(ticket_id),
+            )
+            await repos.save_operator_map(
+                operator_chat_id=settings.operator_id,
+                forwarded_message_id=sent.message_id,
+                user_id=message.from_user.id,
+            )
+        except (TelegramForbiddenError, TelegramBadRequest):
+            logger.exception("Failed to notify operator (ticket=%s)", ticket_id)
 
     await message.answer(
         "Я передал ваш вопрос оператору. Пожалуйста, ожидайте ответа.\n"

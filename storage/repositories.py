@@ -93,3 +93,63 @@ class Repositories:
             """.strip(),
             (last_user_message, _utc_now_iso(), ticket_id),
         )
+
+    async def close_ticket(self, *, ticket_id: int) -> bool:
+        await self.db.execute(
+            """
+            UPDATE tickets
+            SET status = 'closed', updated_at = ?
+            WHERE id = ?
+            """.strip(),
+            (_utc_now_iso(), ticket_id),
+        )
+        row = await self.db.fetchone(
+            "SELECT status FROM tickets WHERE id = ?".strip(), (ticket_id,)
+        )
+        return row is not None and str(row["status"]) == "closed"
+
+    async def get_ticket_user_id(self, *, ticket_id: int) -> int | None:
+        row = await self.db.fetchone(
+            "SELECT user_id FROM tickets WHERE id = ?".strip(),
+            (ticket_id,),
+        )
+        if row is None:
+            return None
+        return int(row["user_id"])
+
+    async def save_operator_map(
+        self,
+        *,
+        operator_chat_id: int,
+        forwarded_message_id: int,
+        user_id: int,
+    ) -> None:
+        await self.db.execute(
+            """
+            INSERT INTO operator_map (
+                operator_chat_id, forwarded_message_id, user_id, created_at
+            )
+            VALUES (?, ?, ?, ?)
+            """.strip(),
+            (operator_chat_id, forwarded_message_id, user_id, _utc_now_iso()),
+        )
+
+    async def get_user_id_by_operator_reply(
+        self,
+        *,
+        operator_chat_id: int,
+        forwarded_message_id: int,
+    ) -> int | None:
+        row = await self.db.fetchone(
+            """
+            SELECT user_id
+            FROM operator_map
+            WHERE operator_chat_id = ? AND forwarded_message_id = ?
+            ORDER BY id DESC
+            LIMIT 1
+            """.strip(),
+            (operator_chat_id, forwarded_message_id),
+        )
+        if row is None:
+            return None
+        return int(row["user_id"])

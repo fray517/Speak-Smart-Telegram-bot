@@ -6,6 +6,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
 from storage.repositories import Repositories
+from utils.config import Settings
 
 
 logger = logging.getLogger(__name__)
@@ -90,4 +91,41 @@ async def cmd_cancel(
             msg_type="text",
             text=text,
         )
+
+
+@router.message(Command("myid"))
+async def cmd_myid(message: Message, settings: Settings) -> None:
+    if message.from_user is None:
+        await message.answer("Не удалось определить пользователя.")
+        return
+
+    chat_id = message.chat.id
+    user_id = message.from_user.id
+    await message.answer(
+        "Идентификаторы:\n\n"
+        f"user_id: {user_id}\n"
+        f"chat_id: {chat_id}\n\n"
+        f"OPERATOR_ID (из .env): {settings.operator_id}"
+    )
+
+
+@router.message(Command("ping_operator"))
+async def cmd_ping_operator(message: Message, settings: Settings) -> None:
+    """
+    Диагностика: проверяем, может ли бот отправить сообщение оператору.
+    """
+    try:
+        sent = await message.bot.send_message(
+            settings.operator_id,
+            "Проверка связи: это тестовое сообщение оператору.",
+        )
+    except Exception as exc:
+        logger.exception("Failed to ping operator")
+        await message.answer(f"Не получилось отправить оператору: {exc}")
+        return
+
+    await message.answer(
+        "Ок, сообщение оператору отправлено.\n"
+        f"message_id: {sent.message_id}"
+    )
 

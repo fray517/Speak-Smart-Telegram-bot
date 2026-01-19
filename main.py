@@ -8,6 +8,7 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from handlers.common import router as common_router
+from handlers.operator import router as operator_router
 from handlers.practice import router as practice_router
 from handlers.support import router as support_router
 from middlewares.db_logging import DbLoggingMiddleware
@@ -34,6 +35,7 @@ def _setup_dispatcher(
     dp.include_router(common_router)
     dp.include_router(practice_router)
     dp.include_router(support_router)
+    dp.include_router(operator_router)
     dp.message.middleware(DbLoggingMiddleware(repos))
     dp.message.middleware(
         ServicesMiddleware(
