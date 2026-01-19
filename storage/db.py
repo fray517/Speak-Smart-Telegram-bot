@@ -42,6 +42,16 @@ class Database:
         await self._conn.execute(query, params)
         await self._conn.commit()
 
+    async def execute_insert(
+        self,
+        query: str,
+        params: tuple[Any, ...] = (),
+    ) -> int:
+        assert self._conn is not None
+        cursor = await self._conn.execute(query, params)
+        await self._conn.commit()
+        return int(cursor.lastrowid)
+
     async def fetchone(
         self,
         query: str,

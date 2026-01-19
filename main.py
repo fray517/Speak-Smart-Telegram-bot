@@ -9,6 +9,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 
 from handlers.common import router as common_router
 from handlers.practice import router as practice_router
+from handlers.support import router as support_router
 from middlewares.db_logging import DbLoggingMiddleware
 from middlewares.services import ServicesMiddleware
 from services.audio_service import AudioService
@@ -32,6 +33,7 @@ def _setup_dispatcher(
     dp = Dispatcher(storage=MemoryStorage())
     dp.include_router(common_router)
     dp.include_router(practice_router)
+    dp.include_router(support_router)
     dp.message.middleware(DbLoggingMiddleware(repos))
     dp.message.middleware(
         ServicesMiddleware(

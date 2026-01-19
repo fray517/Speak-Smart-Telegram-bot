@@ -53,3 +53,43 @@ class Repositories:
             ),
         )
 
+    async def get_open_ticket_by_user(self, *, user_id: int) -> int | None:
+        row = await self.db.fetchone(
+            """
+            SELECT id
+            FROM tickets
+            WHERE user_id = ? AND status = 'open'
+            ORDER BY id DESC
+            LIMIT 1
+            """.strip(),
+            (user_id,),
+        )
+        if row is None:
+            return None
+        return int(row["id"])
+
+    async def create_ticket(self, *, user_id: int, last_user_message: str) -> int:
+        now = _utc_now_iso()
+        ticket_id = await self.db.execute_insert(
+            """
+            INSERT INTO tickets (user_id, status, created_at, updated_at, last_user_message)
+            VALUES (?, 'open', ?, ?, ?)
+            """.strip(),
+            (user_id, now, now, last_user_message),
+        )
+        return ticket_id
+
+    async def update_ticket_last_message(
+        self,
+        *,
+        ticket_id: int,
+        last_user_message: str,
+    ) -> None:
+        await self.db.execute(
+            """
+            UPDATE tickets
+            SET last_user_message = ?, updated_at = ?
+            WHERE id = ?
+            """.strip(),
+            (last_user_message, _utc_now_iso(), ticket_id),
+        )

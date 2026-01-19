@@ -4,7 +4,8 @@ import re
 from dataclasses import dataclass
 
 
-_TOKEN_RE = re.compile(r"[a-z0-9']+", flags=re.IGNORECASE)
+# Latin + Cyrillic (incl. ё) + digits + apostrophe, for simple keyword matching.
+_TOKEN_RE = re.compile(r"[0-9a-zа-яё']+", flags=re.IGNORECASE)
 
 
 @dataclass(frozen=True, slots=True)
@@ -20,7 +21,7 @@ def normalize_text(text: str) -> NormalizedText:
     - lowercase
     - extract tokens (latin letters, digits, apostrophe)
     """
-    text = (text or "").lower().strip()
-    tokens = [t.lower() for t in _TOKEN_RE.findall(text)]
+    text = (text or "").casefold().strip()
+    tokens = [t.casefold() for t in _TOKEN_RE.findall(text)]
     return NormalizedText(text=text, tokens=tokens)
 
